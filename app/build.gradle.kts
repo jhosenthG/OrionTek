@@ -43,6 +43,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.okhttp)
+
     implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.kotlinx.serialization.core)
