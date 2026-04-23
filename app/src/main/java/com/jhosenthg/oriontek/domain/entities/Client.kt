@@ -1,6 +1,5 @@
 package com.jhosenthg.oriontek.domain.entities
 
-import android.location.Address
 
 data class Client(
     val id: String,
