@@ -5,11 +5,11 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface OrionTekApi {
-	@GET("clients")
+	@GET("db.json")
 	suspend fun getClients(): List<ClientDto>
 
-	@GET("clients/{clientId}")
+	@GET("clients/{id}.json")
 	suspend fun getClientById(
-		@Path("clientId") clientId: String
+		@Path("id") clientId: String
 	): ClientDto
 }
