@@ -1,10 +1,8 @@
 package com.jhosenthg.oriontek.data.remote.mapper
-// Imports de DTOs (Capa de Data)
+
 import com.jhosenthg.oriontek.data.remote.dto.AddressDto
 import com.jhosenthg.oriontek.data.remote.dto.ClientDto
 import com.jhosenthg.oriontek.data.remote.dto.ContactDto
-
-// Imports de Entidades (Capa de Domain) - ESTO SOLUCIONA EL MISMATCH
 import com.jhosenthg.oriontek.domain.entities.Address
 import com.jhosenthg.oriontek.domain.entities.AddressType
 import com.jhosenthg.oriontek.domain.entities.Client
