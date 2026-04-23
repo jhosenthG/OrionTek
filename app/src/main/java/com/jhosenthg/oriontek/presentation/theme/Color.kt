@@ -1,4 +1,4 @@
-package com.jhosenthg.oriontek.ui.theme
+package com.jhosenthg.oriontek.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

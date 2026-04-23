@@ -1,6 +1,5 @@
-package com.jhosenthg.oriontek.ui.theme
+package com.jhosenthg.oriontek.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
