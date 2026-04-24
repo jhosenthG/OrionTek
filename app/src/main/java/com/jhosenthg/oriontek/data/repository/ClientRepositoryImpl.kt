@@ -17,7 +17,7 @@ class ClientRepositoryImpl @Inject constructor(
 	override suspend fun getClients(): Flow<Result<List<Client>>> = flow {
 		emit(
 			runCatching {
-				api.getClients().map { clientDto -> clientDto.toDomain() }
+				api.getClients().clients.map { clientDto -> clientDto.toDomain() }
 			}
 		)
 	}

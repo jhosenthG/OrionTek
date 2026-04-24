@@ -11,17 +11,17 @@ import com.jhosenthg.oriontek.domain.entities.Contact
 
 fun AddressDto.toDomain(): Address {
     return Address(
-        id = this.id,
-        label = this.label,
+        id = this.id ?: "${this.street}-${this.zip}".ifBlank { this.city.ifBlank { "address" } },
+        label = this.label ?: this.city.ifBlank { this.street.ifBlank { "Address" } },
         type = try {
-            AddressType.valueOf(this.type.uppercase())
+            AddressType.valueOf((this.type ?: "OFFICE").uppercase())
         } catch (_: Exception) {
             AddressType.OFFICE
         },
         street = this.street,
         suite = this.suite,
         city = this.city,
-        state = this.state,
+        state = this.state ?: "N/A",
         zipCode = this.zip
     )
 }
@@ -29,7 +29,7 @@ fun AddressDto.toDomain(): Address {
 
 fun ContactDto.toDomain(): Contact {
     return Contact(
-        name = this.name,
+        name = this.name ?: this.email.substringBefore('@').ifBlank { "Contacto principal" },
         email = this.email,
         phone = this.phone
     )
