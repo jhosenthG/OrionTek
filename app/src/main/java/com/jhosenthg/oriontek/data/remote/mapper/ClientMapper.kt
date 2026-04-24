@@ -40,6 +40,7 @@ fun ClientDto.toDomain(): Client {
     return Client(
         id = this.id,
         name = this.name,
+        imageUrl = this.imageUrl,
         industry = this.industry,
         status = when (this.status.uppercase()) {
             "ACTIVE" -> ClientStatus.ACTIVE

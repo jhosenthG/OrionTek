@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class ClientDto(
     @SerialName("id") val id: String,
     @SerialName("name") val name: String,
+    @SerialName("image_url") val imageUrl: String? = null,
     @SerialName("industry_type") val industry: String,
     @SerialName("account_status") val status: String,
     @SerialName("contact_info") val contact: ContactDto,
