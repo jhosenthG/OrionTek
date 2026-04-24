@@ -36,7 +36,7 @@ fun SearchAndFilterSection(
 			modifier = Modifier.fillMaxWidth(),
 			singleLine = true,
 			placeholder = {
-				Text("Search clients by name or ID...")
+				Text("Buscar cliente")
 			},
 			leadingIcon = {
 				Icon(
@@ -69,7 +69,7 @@ fun SearchAndFilterSection(
 fun HeaderSection(clientCount: Int) {
 	Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 		Text(
-			text = "Client Directory",
+						text = "Directorio de clientes",
 			style = MaterialTheme.typography.headlineSmall,
 			fontWeight = FontWeight.SemiBold
 		)

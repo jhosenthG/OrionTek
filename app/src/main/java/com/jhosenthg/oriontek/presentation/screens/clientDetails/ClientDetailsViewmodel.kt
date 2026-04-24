@@ -38,8 +38,8 @@ class ClientDetailsViewmodel @Inject constructor(
 		val email: String = "",
 		val phone: String = "",
 		val addresses: List<AddressUi> = emptyList(),
-		val activityBars: List<Float> = emptyList(),
-		val activityDeltaLabel: String = "",
+		val searchQuery: String = "",
+		val isSearchActive: Boolean = false,
 		val errorMessage: String? = null
 	)
 
@@ -48,6 +48,7 @@ class ClientDetailsViewmodel @Inject constructor(
 
 	private var lastClientId: String? = null
 	private var loadJob: Job? = null
+	private var allAddresses: List<AddressUi> = emptyList()
 
 	fun loadClient(clientId: String) {
 		if (clientId.isBlank()) {
@@ -67,8 +68,11 @@ class ClientDetailsViewmodel @Inject constructor(
 
 			getClientDetailsUseCase(clientId).collect { result ->
 				result.onSuccess { client ->
-					_uiState.value = mapClientToUiState(client)
+					val mappedState = mapClientToUiState(client)
+					allAddresses = mappedState.addresses
+					_uiState.value = mappedState
 				}.onFailure { throwable ->
+					allAddresses = emptyList()
 					_uiState.update { state ->
 						state.copy(
 							isLoading = false,
@@ -84,8 +88,27 @@ class ClientDetailsViewmodel @Inject constructor(
 		lastClientId?.let(::loadClient)
 	}
 
+	fun onSearchClick() {
+		val state = _uiState.value
+		if (state.isSearchActive) {
+			_uiState.update {
+				it.copy(
+					isSearchActive = false,
+					searchQuery = "",
+					addresses = allAddresses
+				)
+			}
+		} else {
+			_uiState.update { it.copy(isSearchActive = true) }
+		}
+	}
+
+	fun onSearchQueryChange(query: String) {
+		_uiState.update { it.copy(searchQuery = query) }
+		applyAddressFilter(query)
+	}
+
 	private fun mapClientToUiState(client: Client): UiState {
-		val bars = toBars(client.recentOrderData)
 		return UiState(
 			isLoading = false,
 			clientName = client.name,
@@ -95,10 +118,26 @@ class ClientDetailsViewmodel @Inject constructor(
 			email = client.primaryContact.email,
 			phone = client.primaryContact.phone,
 			addresses = client.addresses.map(::mapAddress),
-			activityBars = bars,
-			activityDeltaLabel = calculateDeltaLabel(client.recentOrderData),
+			searchQuery = "",
+			isSearchActive = false,
 			errorMessage = null
 		)
+	}
+
+	private fun applyAddressFilter(query: String) {
+		val normalizedQuery = query.trim().lowercase()
+		val filtered = if (normalizedQuery.isBlank()) {
+			allAddresses
+		} else {
+			allAddresses.filter { address ->
+				address.label.lowercase().contains(normalizedQuery) ||
+					address.typeLabel.lowercase().contains(normalizedQuery) ||
+					address.line1.lowercase().contains(normalizedQuery) ||
+					address.line2.lowercase().contains(normalizedQuery)
+			}
+		}
+
+		_uiState.update { it.copy(addresses = filtered) }
 	}
 
 	private fun mapAddress(address: Address): AddressUi {
@@ -115,7 +154,12 @@ class ClientDetailsViewmodel @Inject constructor(
 	}
 
 	private fun formatAddressType(type: AddressType): String {
-		return type.name.lowercase().replaceFirstChar { it.uppercase() }
+		return when (type) {
+			AddressType.OFFICE -> "Oficina"
+			AddressType.BILLING -> "Facturacion"
+			AddressType.OPERATIONS -> "Operaciones"
+			AddressType.WAREHOUSE -> "Almacen"
+		}
 	}
 
 	private fun buildInitials(name: String): String {
@@ -130,27 +174,10 @@ class ClientDetailsViewmodel @Inject constructor(
 
 	private fun accountLabelFor(status: ClientStatus): String {
 		return when (status) {
-			ClientStatus.ACTIVE -> "Enterprise Account"
-			ClientStatus.PENDING -> "Pending Account"
-			ClientStatus.INACTIVE -> "Inactive Account"
+			ClientStatus.ACTIVE -> "Cuenta empresarial"
+			ClientStatus.PENDING -> "Cuenta pendiente"
+			ClientStatus.INACTIVE -> "Cuenta inactiva"
 		}
 	}
 
-	private fun toBars(values: List<Int>): List<Float> {
-		if (values.isEmpty()) {
-			return listOf(0.4f, 0.6f, 0.45f, 0.7f, 0.85f, 0.65f, 0.5f)
-		}
-		val maxValue = values.maxOrNull()?.coerceAtLeast(1) ?: 1
-		return values.map { value -> value.toFloat() / maxValue.toFloat() }
-	}
-
-	private fun calculateDeltaLabel(values: List<Int>): String {
-		if (values.size < 2 || values.first() == 0) return "Sin variacion"
-
-		val first = values.first().toDouble()
-		val last = values.last().toDouble()
-		val percentage = ((last - first) / first) * 100
-		val sign = if (percentage >= 0) "+" else ""
-		return "$sign${"%.1f".format(percentage)}% este mes"
-	}
 }

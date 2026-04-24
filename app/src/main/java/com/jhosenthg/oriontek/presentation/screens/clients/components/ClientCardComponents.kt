@@ -40,9 +40,9 @@ fun ClientCard(
 	onClick: () -> Unit
 ) {
 	val addressLabel = if (client.addresses.size == 1) {
-		"1 Registered Address"
+		"1 direccion registrada"
 	} else {
-		"${client.addresses.size} Registered Addresses"
+		"${client.addresses.size} direcciones registradas"
 	}
 
 	Card(
@@ -146,7 +146,7 @@ private fun ClientIconBadge(imageUrl: String?, status: ClientStatus) {
 		if (!imageUrl.isNullOrBlank()) {
 			AsyncImage(
 				model = imageUrl,
-				contentDescription = "Client logo",
+				contentDescription = "Logo del cliente",
 				modifier = Modifier.fillMaxSize(),
 				contentScale = androidx.compose.ui.layout.ContentScale.Crop
 			)
@@ -167,17 +167,17 @@ private fun StatusBadge(status: ClientStatus) {
 		ClientStatus.ACTIVE -> Triple(
 			MaterialTheme.colorScheme.tertiary.copy(alpha = 0.22f),
 			MaterialTheme.colorScheme.secondary,
-			"ACTIVE"
+			"ACTIVO"
 		)
 		ClientStatus.PENDING -> Triple(
 			MaterialTheme.colorScheme.outline.copy(alpha = 0.16f),
 			MaterialTheme.colorScheme.onSurfaceVariant,
-			"PENDING"
+			"PENDIENTE"
 		)
 		ClientStatus.INACTIVE -> Triple(
 			MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
 			MaterialTheme.colorScheme.outline,
-			"INACTIVE"
+			"INACTIVO"
 		)
 	}
 

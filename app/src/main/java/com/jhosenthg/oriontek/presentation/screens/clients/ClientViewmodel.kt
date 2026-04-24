@@ -35,9 +35,9 @@ class ClientViewModel @Inject constructor(
 	)
 
 	enum class ClientFilter(val label: String) {
-		ALL("All Clients"),
-		ACTIVE("Active Contracts"),
-		RECENT("Recent Updates")
+		ALL("Todos los clientes"),
+		ACTIVE("Contratos activos"),
+		RECENT("Actualizaciones recientes")
 	}
 
 	private val _uiState = MutableStateFlow(UiState(isLoading = true))
@@ -136,6 +136,6 @@ class ClientViewModel @Inject constructor(
 	}
 
 	fun formatAddressCount(count: Int): String {
-		return if (count == 1) "1 Registered Address" else "$count Registered Addresses"
+		return if (count == 1) "1 direccion registrada" else "$count direcciones registradas"
 	}
 }
