@@ -7,6 +7,14 @@ import com.jhosenthg.oriontek.domain.entities.ClientStatus
 import com.jhosenthg.oriontek.domain.useCase.GetClientsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.Business
+import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.LocalShipping
+import androidx.compose.material.icons.outlined.PrecisionManufacturing
+import androidx.compose.material.icons.outlined.RocketLaunch
+import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -113,5 +121,21 @@ class ClientViewModel @Inject constructor(
 		return client.name.lowercase().contains(normalizedQuery) ||
 			client.id.lowercase().contains(normalizedQuery) ||
 			client.primaryContact.name.lowercase().contains(normalizedQuery)
+	}
+
+	fun getClientIcon(client: Client): ImageVector {
+		val industry = client.industry.lowercase()
+		return when {
+			"health" in industry || "medical" in industry -> Icons.Outlined.HealthAndSafety
+			"finance" in industry || "investment" in industry -> Icons.Outlined.AccountBalance
+			"logistic" in industry || "supply" in industry -> Icons.Outlined.LocalShipping
+			"aerospace" in industry || "venture" in industry -> Icons.Outlined.RocketLaunch
+			"industry" in industry || "manufact" in industry -> Icons.Outlined.PrecisionManufacturing
+			else -> Icons.Outlined.Business
+		}
+	}
+
+	fun formatAddressCount(count: Int): String {
+		return if (count == 1) "1 Registered Address" else "$count Registered Addresses"
 	}
 }
